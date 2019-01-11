@@ -1,0 +1,101 @@
+version: '3'
+services:  
+
+  server1:
+    image: eshop-server:v1
+    ports:
+      - 8101:8101
+    environment:
+      - "spring.profiles.active=server1"
+    expose:
+      - 8101
+
+  server2:
+    image: eshop-server:v1
+    ports:
+      - 8102:8102
+    environment:
+      - "spring.profiles.active=server2"
+    expose:
+      - 8102
+
+  userservice1:
+    image: eshop-userservice:v1
+    ports:
+      - 8201:8201
+    environment:
+      - "spring.profiles.active=client1"
+    depends_on:
+      - server1
+      - server2
+    expose:
+      - 8201
+
+  userservice2:
+    image: eshop-userservice:v1
+    ports:
+      - 8202:8202
+    environment:
+      - "spring.profiles.active=client2"
+    depends_on:
+      - server1
+      - server2
+    expose:
+      - 8202
+
+
+  productservice1:
+    image: eshop-productservice:v1
+    ports:
+      - 8301:8301
+    environment:
+      - "spring.profiles.active=client1"
+    depends_on:
+      - server1
+      - server2
+    expose:
+      - 8301
+
+  productservice2:
+    image: eshop-productservice:v1
+    ports:
+      - 8302:8302
+    environment:
+      - "spring.profiles.active=client2"
+    depends_on:
+      - server1
+      - server2
+    expose:
+      - 8302
+
+  orderservice1:
+    image: eshop-orderservice:v1
+    ports:
+      - 8401:8401
+    environment:
+      - "spring.profiles.active=client1"
+    depends_on:
+      - server1
+      - server2
+      - userservice1
+      - userservice2
+      - productservice1
+      - productservice2
+    expose:
+      - 8401
+
+  orderservice2:
+    image: eshop-orderservice:v1
+    ports:
+      - 8402:8402
+    environment:
+      - "spring.profiles.active=client2"
+    depends_on:
+      - server1
+      - server2
+      - userservice1
+      - userservice2
+      - productservice1
+      - productservice2
+    expose:
+      - 8402
